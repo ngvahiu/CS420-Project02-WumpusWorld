@@ -1,5 +1,6 @@
 import math
-
+from enum import Enum
+from agent import Action
 import pygame
 
 from constants import *
@@ -20,6 +21,10 @@ class Cell:
             "breeze": None,
             "stench": None,
         }
+        self.parent = None
+    
+    def __eq__(self, other) -> bool:
+        return self.x == other.x and self.y == other.y
 
     def init_img_list(self):
         if self.type == "-":
@@ -219,3 +224,28 @@ class Cell:
                         self.y * CELL_SIZE,
                     ),
                 )
+    def has_pit(self):
+        return 'P' in self.type
+    
+    def has_stench(self):
+        return 'S' in self.type
+    
+    def has_wumpus(self):
+        return 'W' in self.type
+    
+    def has_breeze(self):
+        return 'B' in self.type
+
+    def get_location(self):
+        return self.x * 10 + self.y
+
+    def get_turn_action(self, other):
+        if self.y == other.y:
+            if self.x < other.x:
+                return Action.TURN_RIGHT
+            else:
+                return Action.TURN_LEFT
+        elif self.y < other.y:
+            return Action.TURN_DOWN
+        else:
+            return Action.TURN_UP

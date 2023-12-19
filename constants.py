@@ -45,3 +45,9 @@ FAILED_IMAGE = "../assets/images/failed.png"
 
 # speed
 SPEED = 50
+
+#object values
+BREEZE = 1
+STENCH = 2
+PIT = 3
+WUMPUS = 4

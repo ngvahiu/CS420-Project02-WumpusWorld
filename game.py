@@ -1,5 +1,6 @@
 import random
 import sys
+from agent_brain import AgentBrain
 
 import pygame
 
@@ -25,6 +26,8 @@ class Game:
         self.state = "menu"
 
         self.agent = Agent()
+
+        self.agent_brain = AgentBrain()
 
     def draw_running_screen(self, noti_type: Notification = None):
         self.screen.fill((255, 255, 255))
@@ -253,52 +256,55 @@ class Game:
             if self.state == "menu":
                 self.draw_menu_screen()
             elif self.state == "running":
-                self.test_ui()
+                action_list = self.agent_brain.solve(self.agent.cell, self.map)
+                print(123)
             elif self.state == "success":
                 self.draw_success_screen()
             elif self.state == "failed":
                 self.draw_failed_screen()
 
     def test_ui(self):
-        self.agent.cell.visited = True
-        self.draw_running_screen()
+        pass
 
-        if (
-            (self.agent.direction == Direction.UP and self.agent.cell.y > 0)
-            or (self.agent.direction == Direction.DOWN and self.agent.cell.y < 9)
-            or (self.agent.direction == Direction.LEFT and self.agent.cell.x > 0)
-            or (self.agent.direction == Direction.RIGHT and self.agent.cell.x < 9)
-        ):
-            arrow_cell = self.agent.shoot_arrow(self.map.grid_cells)
-            self.draw_running_screen(Notification.SHOOT_ARROW)
+        # self.agent.cell.visited = True
+        # self.draw_running_screen()
 
-        if "G" in self.agent.cell.type:
-            self.draw_running_screen()
-            self.draw_running_screen(Notification.COLLECT_GOLD)
-            self.agent.collect_gold()
+        # if (
+        #     (self.agent.direction == Direction.UP and self.agent.cell.y > 0)
+        #     or (self.agent.direction == Direction.DOWN and self.agent.cell.y < 9)
+        #     or (self.agent.direction == Direction.LEFT and self.agent.cell.x > 0)
+        #     or (self.agent.direction == Direction.RIGHT and self.agent.cell.x < 9)
+        # ):
+        #     arrow_cell = self.agent.shoot_arrow(self.map.grid_cells)
+        #     self.draw_running_screen(Notification.SHOOT_ARROW)
 
-        direc = random.choice(list(Direction))
-        if (
-            (direc == Direction.UP and self.agent.cell.y > 0)
-            or (direc == Direction.DOWN and self.agent.cell.y < 9)
-            or (direc == Direction.LEFT and self.agent.cell.x > 0)
-            or (direc == Direction.RIGHT and self.agent.cell.y < 9)
-        ):
-            if direc == Direction.UP:
-                self.agent.turn_up()
-                self.draw_running_screen()
-                self.agent.move_forward(self.map.grid_cells)
-            if direc == Direction.DOWN:
-                self.agent.turn_down()
-                self.draw_running_screen()
-                self.agent.move_forward(self.map.grid_cells)
-            if direc == Direction.LEFT:
-                self.agent.turn_left()
-                self.draw_running_screen()
-                self.agent.move_forward(self.map.grid_cells)
-            if direc == Direction.RIGHT:
-                self.agent.turn_right()
-                self.draw_running_screen()
-                self.agent.move_forward(self.map.grid_cells)
+        # if "G" in self.agent.cell.type:
+        #     self.draw_running_screen()
+        #     self.draw_running_screen(Notification.COLLECT_GOLD)
+        #     self.agent.collect_gold()
 
-        pygame.time.delay(500)
+        # direc = random.choice(list(Direction))
+        # if (
+        #     (direc == Direction.UP and self.agent.cell.y > 0)
+        #     or (direc == Direction.DOWN and self.agent.cell.y < 9)
+        #     or (direc == Direction.LEFT and self.agent.cell.x > 0)
+        #     or (direc == Direction.RIGHT and self.agent.cell.y < 9)
+        # ):
+        #     if direc == Direction.UP:
+        #         self.agent.turn_up()
+        #         self.draw_running_screen()
+        #         self.agent.move_forward(self.map.grid_cells)
+        #     if direc == Direction.DOWN:
+        #         self.agent.turn_down()
+        #         self.draw_running_screen()
+        #         self.agent.move_forward(self.map.grid_cells)
+        #     if direc == Direction.LEFT:
+        #         self.agent.turn_left()
+        #         self.draw_running_screen()
+        #         self.agent.move_forward(self.map.grid_cells)
+        #     if direc == Direction.RIGHT:
+        #         self.agent.turn_right()
+        #         self.draw_running_screen()
+        #         self.agent.move_forward(self.map.grid_cells)
+
+        # pygame.time.delay(500)
