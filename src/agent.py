@@ -11,31 +11,29 @@ class Direction(Enum):
     RIGHT = "RIGHT"
 
 class Action(Enum):
-    TURN_LEFT = 1
-    TURN_RIGHT = 2
-    TURN_UP = 3
-    TURN_DOWN = 4
-    MOVE_FORWARD = 5
-    GRAB_GOLD = 6
-    PERCEIVE_BREEZE = 7
-    PERCEIVE_STENCH = 8
-    SHOOT = 9
-    KILL_WUMPUS = 10
-    KILL_NO_WUMPUS = 11
-    BE_EATEN_BY_WUMPUS = 12
-    KILL_BY_PIT = 13
-    KILL_ALL_WUMPUS_AND_GRAB_ALL_FOOD = 14
-    CLIMB_OUT_OF_THE_CAVE = 15
-    DECTECT_PIT = 16
-    DETECT_WUMPUS = 17
-    DETECT_NO_PIT = 18
-    DETECT_NO_WUMPUS = 19
-    INFER_PIT = 20
-    INFER_NOT_PIT = 21
-    INFER_WUMPUS = 22
-    INFER_NOT_WUMPUS = 23
-    DETECT_SAFE = 24
-    INFER_SAFE = 25
+    TURN_LEFT = "TURN LEFT"
+    TURN_RIGHT = "TURN RIGHT"
+    TURN_UP = "TURN UP"
+    TURN_DOWN = "TURN DOWN"
+    MOVE_FORWARD = "MOVE FORWARD"
+    GRAB_GOLD = "GRAB GOLD"
+    PERCEIVE_BREEZE = "PERCEIVE BREEZE"
+    PERCEIVE_STENCH = "PERCEIVE STENCH"
+    SHOOT = "SHOOT ARROW"
+    KILL_WUMPUS = "KILL WUMPUS"
+    KILL_NO_WUMPUS = "KILL NO WUMPUS"
+    KILL_BY_WUMPUS = "KILLED BY WUMPUS"
+    KILL_BY_PIT = "KILLED BY PIT"
+    CLIMB_OUT_OF_THE_CAVE = "CLIMB OUT OF THE CAVE"
+    DECTECT_PIT = "DETECT PIT"
+    DETECT_WUMPUS = "DETECT WUMPUS"
+    DETECT_NO_PIT = "DETECT NO PIT"
+    DETECT_NO_WUMPUS = "DETECT NO WUMPUS"
+    INFER_PIT = "INFER PIT"
+    INFER_WUMPUS = "INFER WUMPUS"
+    REMOVE_KNOWLEDGE_RELATED_TO_WUMPUS = "REMOVE KNOWLEDGE RELATED TO WUMPUS"
+    SHOOT_RANDOMLY = "SHOOT RANDOMLY"
+    FAIL_TO_INFER = "FAIL TO INFER"
 
 
 class Agent:
@@ -62,6 +60,7 @@ class Agent:
 
         self.cell = self.cell.check_cell(self.cell.x, self.cell.y - 1, grid_cells)
         self.cell.type = "A" + self.cell.type
+        self.cell.visited = True
 
         self.cell.img_list["agent"] = prev_cell.img_list["agent"]
         prev_cell.img_list["agent"] = None
@@ -74,6 +73,7 @@ class Agent:
 
         self.cell = self.cell.check_cell(self.cell.x, self.cell.y + 1, grid_cells)
         self.cell.type = "A" + self.cell.type
+        self.cell.visited = True
 
         self.cell.img_list["agent"] = prev_cell.img_list["agent"]
         prev_cell.img_list["agent"] = None
@@ -86,6 +86,7 @@ class Agent:
 
         self.cell = self.cell.check_cell(self.cell.x - 1, self.cell.y, grid_cells)
         self.cell.type = "A" + self.cell.type
+        self.cell.visited = True
 
         self.cell.img_list["agent"] = prev_cell.img_list["agent"]
         prev_cell.img_list["agent"] = None
@@ -98,6 +99,7 @@ class Agent:
 
         self.cell = self.cell.check_cell(self.cell.x + 1, self.cell.y, grid_cells)
         self.cell.type = "A" + self.cell.type
+        self.cell.visited = True
 
         self.cell.img_list["agent"] = prev_cell.img_list["agent"]
         prev_cell.img_list["agent"] = None

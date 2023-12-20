@@ -22,9 +22,17 @@ class Cell:
             "stench": None,
         }
         self.parent = None
+        self.is_safe = True
+        if 'W' in type or 'P' in type:
+            self.is_safe = False
     
     def __eq__(self, other) -> bool:
+        if other is None:
+            return False
         return self.x == other.x and self.y == other.y
+
+    def __lt__(self, other):
+        return self.x+abs(self.y-(self.map_size-1)) <= other.x + abs(other.y-(self.map_size-1))
 
     def init_img_list(self):
         if self.type == "-":
@@ -66,14 +74,14 @@ class Cell:
         left = self.check_cell(self.x - 1, self.y, grid_cells)
         right = self.check_cell(self.x + 1, self.y, grid_cells)
 
+        if right:
+            neighbors.append(right)
+        if left:
+            neighbors.append(left)
         if top:
             neighbors.append(top)
         if bottom:
             neighbors.append(bottom)
-        if left:
-            neighbors.append(left)
-        if right:
-            neighbors.append(right)
 
         return neighbors
 
@@ -235,6 +243,9 @@ class Cell:
     
     def has_breeze(self):
         return 'B' in self.type
+    
+    def has_gold(self):
+        return 'G' in self.type
 
     def get_location(self):
         return self.x * 10 + self.y
@@ -247,5 +258,28 @@ class Cell:
                 return Action.TURN_LEFT
         elif self.y < other.y:
             return Action.TURN_DOWN
-        else:
+        elif self.y > other.y:
             return Action.TURN_UP
+    
+
+    
+    def remove_stench(self, grid_cells):
+        if not self.has_wumpus():
+            return
+        self.is_safe = True
+        neighbors = self.get_neighbors(grid_cells)
+        for neighbor in neighbors:
+            is_delete_stench = True
+            neighbors_of_neighbor = neighbor.get_neighbors(grid_cells)
+            if self in neighbors_of_neighbor:
+                neighbors_of_neighbor.remove(self)
+            for cell in neighbors_of_neighbor:
+                if cell.has_wumpus():
+                    is_delete_stench = False
+            if is_delete_stench:
+                neighbor.type = neighbor.type[:neighbor.type.index('S')] + neighbor.type[neighbor.type.index('S') + 1:]
+                if neighbor.type == '':
+                    neighbor.type = '-'
+
+
+        

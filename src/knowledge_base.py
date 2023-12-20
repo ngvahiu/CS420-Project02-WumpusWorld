@@ -1,5 +1,5 @@
 import copy
-from pysat.solvers import Glucose3
+from dpll import SATSolver
 class KnowledgeBase:
     def __init__(self):
         self.sentences = []
@@ -11,7 +11,7 @@ class KnowledgeBase:
 
 
     def tell(self, sentence):
-        sentence = self.standardize_clause(sentence)
+        sentence = self.standardize_sentence(sentence)
         if sentence not in self.sentences:
             self.sentences.append(sentence)
 
@@ -23,13 +23,9 @@ class KnowledgeBase:
 
 
     def ask(self, sentence):
-        g = Glucose3()
         clause_list = copy.deepcopy(self.sentences)
-        not_sentence = -1 * sentence
-        for it in clause_list:
-            g.add_clause(it)
-        for it in not_sentence:
-            g.add_clause(it)
+        clause_list.extend(sentence)
+        g = SATSolver(clause_list)
         sol = g.solve()
         if sol:
             return False
