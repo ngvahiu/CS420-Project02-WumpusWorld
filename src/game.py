@@ -1,6 +1,5 @@
-import random
 import sys
-
+from agent_brain import AgentBrain
 import pygame
 
 from agent import *
@@ -25,6 +24,10 @@ class Game:
         self.state = "menu"
 
         self.agent = Agent()
+
+        self.agent_brain = None
+
+        self.current_step = 0
 
     def draw_running_screen(self, noti_type: Notification = None):
         self.screen.fill((255, 255, 255))
@@ -121,31 +124,31 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 mouse = pygame.mouse.get_pos()
                 if 350 <= mouse[0] <= 800 and 150 <= mouse[1] <= 200:
-                    self.state = "running"
+                    self.state = "solving"
                     self.map = Map(MAP_1)
                     self.map_size = self.map.map_size
                     self.agent.cell = self.map.get_agent_cell()
                     self.agent.map_size = self.map.map_size
                 elif 350 <= mouse[0] <= 800 and 230 <= mouse[1] <= 300:
-                    self.state = "running"
+                    self.state = "solving"
                     self.map = Map(MAP_2)
                     self.map_size = self.map.map_size
                     self.agent.cell = self.map.get_agent_cell()
                     self.agent.map_size = self.map.map_size
                 elif 350 <= mouse[0] <= 800 and 310 <= mouse[1] <= 360:
-                    self.state = "running"
+                    self.state = "solving"
                     self.map = Map(MAP_3)
                     self.map_size = self.map.map_size
                     self.agent.cell = self.map.get_agent_cell()
                     self.agent.map_size = self.map.map_size
                 elif 350 <= mouse[0] <= 800 and 390 <= mouse[1] <= 440:
-                    self.state = "running"
+                    self.state = "solving"
                     self.map = Map(MAP_4)
                     self.map_size = self.map.map_size
                     self.agent.cell = self.map.get_agent_cell()
                     self.agent.map_size = self.map.map_size
                 elif 350 <= mouse[0] <= 800 and 470 <= mouse[1] <= 520:
-                    self.state = "running"
+                    self.state = "solving"
                     self.map = Map(MAP_5)
                     self.map_size = self.map.map_size
                     self.agent.cell = self.map.get_agent_cell()
@@ -252,53 +255,109 @@ class Game:
         while True:
             if self.state == "menu":
                 self.draw_menu_screen()
-            elif self.state == "running":
-                self.test_ui()
+            elif self.state == "solving":
+                agent_cell = self.agent.cell
+                self.agent_brain = AgentBrain(self.agent.cell, self.map.grid_cells)
+                self.agent_brain.solve()
+                self.action_list = self.agent_brain.action_list
+                if self.agent.cell.x == 0 and self.agent.cell.y == self.agent.cell.map_size - 1:
+                    self.action_list.append(Action.TURN_DOWN)
+                    self.action_list.append(Action.CLIMB_OUT_OF_THE_CAVE)
+                else:
+                    exist_cell = None
+                    for cell in self.map.grid_cells:
+                        if cell.x == 0 and cell.y == cell.map_size - 1:
+                            exist_cell = cell
+                    if exist_cell.visited:
+                        for cell in self.map.grid_cells:
+                            cell.visited = False
+                        self.agent_brain.action_list = []
+                        self.agent_brain.find_exist()
+                        self.action_list.extend(self.agent_brain.action_list)
+                    else:
+                        print("Agent can not find way out")
+                for cell in self.map.grid_cells:
+                    cell.visited = False
+                agent_cell.visited = True
+                self.state = 'show_result'
+            elif self.state == 'show_result':
+                self.show_result()
             elif self.state == "success":
                 self.draw_success_screen()
             elif self.state == "failed":
                 self.draw_failed_screen()
 
-    def test_ui(self):
-        self.agent.cell.visited = True
+    def show_result(self):
         self.draw_running_screen()
-
-        if (
-            (self.agent.direction == Direction.UP and self.agent.cell.y > 0)
-            or (self.agent.direction == Direction.DOWN and self.agent.cell.y < 9)
-            or (self.agent.direction == Direction.LEFT and self.agent.cell.x > 0)
-            or (self.agent.direction == Direction.RIGHT and self.agent.cell.x < 9)
-        ):
-            arrow_cell = self.agent.shoot_arrow(self.map.grid_cells)
-            self.draw_running_screen(Notification.SHOOT_ARROW)
-
-        if "G" in self.agent.cell.type:
-            self.draw_running_screen()
+        if self.current_step == len(self.action_list):
+            self.state = "success"
+            return
+        action = self.action_list[self.current_step]
+        if len(self.action_list) > self.current_step:
+            self.current_step +=1
+        if action == Action.TURN_LEFT:
+            self.agent.turn_left()
+        elif action == Action.TURN_RIGHT:
+            self.agent.turn_right() 
+        elif action == Action.TURN_UP:
+            self.agent.turn_up()
+        elif action == Action.TURN_DOWN:
+            self.agent.turn_down()
+        elif action == Action.MOVE_FORWARD:
+            from cell import Cell
+            self.agent.move_forward(self.map.grid_cells)
+        elif action == Action.GRAB_GOLD:
             self.draw_running_screen(Notification.COLLECT_GOLD)
             self.agent.collect_gold()
-
-        direc = random.choice(list(Direction))
-        if (
-            (direc == Direction.UP and self.agent.cell.y > 0)
-            or (direc == Direction.DOWN and self.agent.cell.y < 9)
-            or (direc == Direction.LEFT and self.agent.cell.x > 0)
-            or (direc == Direction.RIGHT and self.agent.cell.y < 9)
-        ):
-            if direc == Direction.UP:
-                self.agent.turn_up()
-                self.draw_running_screen()
-                self.agent.move_forward(self.map.grid_cells)
-            if direc == Direction.DOWN:
-                self.agent.turn_down()
-                self.draw_running_screen()
-                self.agent.move_forward(self.map.grid_cells)
-            if direc == Direction.LEFT:
-                self.agent.turn_left()
-                self.draw_running_screen()
-                self.agent.move_forward(self.map.grid_cells)
-            if direc == Direction.RIGHT:
-                self.agent.turn_right()
-                self.draw_running_screen()
-                self.agent.move_forward(self.map.grid_cells)
-
-        pygame.time.delay(500)
+        elif action == Action.PERCEIVE_BREEZE:
+            print("Perceiving breeze")
+        elif action == Action.PERCEIVE_STENCH:
+            print("Perceiving stench")
+        elif action == Action.SHOOT:
+            print("Shooting wumpus")
+            arrow_cell = self.agent.shoot_arrow(self.map.grid_cells)
+            self.draw_running_screen(Notification.SHOOT_ARROW)
+        elif action == Action.KILL_WUMPUS:
+            print("Killing Wumpus")
+        elif action == Action.KILL_NO_WUMPUS:
+            print("Killing, but no Wumpus found")
+        elif action == Action.KILL_BY_WUMPUS:
+            print("Killed by Wumpus")
+        elif action == Action.KILL_BY_PIT:
+            print("Killed by Pit")
+        elif action == Action.CLIMB_OUT_OF_THE_CAVE:
+            print("Climbing out of the cave")
+        elif action == Action.DECTECT_PIT:
+            pit_cell = self.agent_brain.action_cells[self.current_step-1]
+            pit_x, pit_y = pit_cell.x, pit_cell.y
+            print("Detect pit at: " + str(pit_x) + " " + str(pit_y))
+            pit_cell.visited = True
+        elif action == Action.DETECT_WUMPUS:
+            wumpus_cell = self.agent_brain.action_cells[self.current_step-1]
+            wumpus_x, wumpus_y = wumpus_cell.x, wumpus_cell.y
+            print("Detect wumpus at: " + str(wumpus_x) + " " + str(wumpus_y))
+            wumpus_cell.visited = True
+        elif action == Action.DETECT_NO_PIT:
+            pit_cell = self.agent_brain.action_cells[self.current_step-1]
+            pit_x, pit_y = pit_cell.x, pit_cell.y
+            print("Detect no pit at: " + str(pit_x) + " " + str(pit_y))
+        elif action == Action.DETECT_NO_WUMPUS:
+            wumpus_cell = self.agent_brain.action_cells[self.current_step-1]
+            wumpus_x, wumpus_y = wumpus_cell.x, wumpus_cell.y
+            print("Detect no wumpus at: " + str(wumpus_x) + " " + str(wumpus_y))
+        elif action == Action.INFER_PIT:
+            print("Inferring pit")
+        elif action == Action.INFER_WUMPUS:
+            print("Inferring Wumpus")
+        elif action == Action.REMOVE_KNOWLEDGE_RELATED_TO_WUMPUS:
+            print("Remove knowledge related to killed wumpus")
+        elif action == Action.SHOOT_RANDOMLY:
+            print("Start shooting randomly")
+        elif action == Action.FAIL_TO_INFER:
+            infer_cell = self.agent_brain.action_cells[self.current_step-1]
+            infer_cell_x, infer_cell_y = infer_cell.x, infer_cell.y
+            print("Fail to infer cell: " + str(infer_cell_x) + " " + str(infer_cell_y))
+        else:
+            print("Unknown action")
+        self.draw_running_screen()
+        pygame.time.delay(100)

@@ -4,12 +4,36 @@ import pygame
 
 from constants import *
 
-
 class Direction(Enum):
     UP = "UP"
     DOWN = "DOWN"
     LEFT = "LEFT"
     RIGHT = "RIGHT"
+
+class Action(Enum):
+    TURN_LEFT = "TURN LEFT"
+    TURN_RIGHT = "TURN RIGHT"
+    TURN_UP = "TURN UP"
+    TURN_DOWN = "TURN DOWN"
+    MOVE_FORWARD = "MOVE FORWARD"
+    GRAB_GOLD = "GRAB GOLD"
+    PERCEIVE_BREEZE = "PERCEIVE BREEZE"
+    PERCEIVE_STENCH = "PERCEIVE STENCH"
+    SHOOT = "SHOOT ARROW"
+    KILL_WUMPUS = "KILL WUMPUS"
+    KILL_NO_WUMPUS = "KILL NO WUMPUS"
+    KILL_BY_WUMPUS = "KILLED BY WUMPUS"
+    KILL_BY_PIT = "KILLED BY PIT"
+    CLIMB_OUT_OF_THE_CAVE = "CLIMB OUT OF THE CAVE"
+    DECTECT_PIT = "DETECT PIT"
+    DETECT_WUMPUS = "DETECT WUMPUS"
+    DETECT_NO_PIT = "DETECT NO PIT"
+    DETECT_NO_WUMPUS = "DETECT NO WUMPUS"
+    INFER_PIT = "INFER PIT"
+    INFER_WUMPUS = "INFER WUMPUS"
+    REMOVE_KNOWLEDGE_RELATED_TO_WUMPUS = "REMOVE KNOWLEDGE RELATED TO WUMPUS"
+    SHOOT_RANDOMLY = "SHOOT RANDOMLY"
+    FAIL_TO_INFER = "FAIL TO INFER"
 
 
 class Agent:
@@ -36,6 +60,7 @@ class Agent:
 
         self.cell = self.cell.check_cell(self.cell.x, self.cell.y - 1, grid_cells)
         self.cell.type = "A" + self.cell.type
+        self.cell.visited = True
 
         self.cell.img_list["agent"] = prev_cell.img_list["agent"]
         prev_cell.img_list["agent"] = None
@@ -48,6 +73,7 @@ class Agent:
 
         self.cell = self.cell.check_cell(self.cell.x, self.cell.y + 1, grid_cells)
         self.cell.type = "A" + self.cell.type
+        self.cell.visited = True
 
         self.cell.img_list["agent"] = prev_cell.img_list["agent"]
         prev_cell.img_list["agent"] = None
@@ -60,6 +86,7 @@ class Agent:
 
         self.cell = self.cell.check_cell(self.cell.x - 1, self.cell.y, grid_cells)
         self.cell.type = "A" + self.cell.type
+        self.cell.visited = True
 
         self.cell.img_list["agent"] = prev_cell.img_list["agent"]
         prev_cell.img_list["agent"] = None
@@ -72,6 +99,7 @@ class Agent:
 
         self.cell = self.cell.check_cell(self.cell.x + 1, self.cell.y, grid_cells)
         self.cell.type = "A" + self.cell.type
+        self.cell.visited = True
 
         self.cell.img_list["agent"] = prev_cell.img_list["agent"]
         prev_cell.img_list["agent"] = None
