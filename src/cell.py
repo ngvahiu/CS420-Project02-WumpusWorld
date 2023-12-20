@@ -274,7 +274,7 @@ class Cell:
             if self in neighbors_of_neighbor:
                 neighbors_of_neighbor.remove(self)
             for cell in neighbors_of_neighbor:
-                if cell.has_wumpus():
+                if cell.has_wumpus() and cell.is_safe == False:
                     is_delete_stench = False
             if is_delete_stench:
                 neighbor.type = neighbor.type[:neighbor.type.index('S')] + neighbor.type[neighbor.type.index('S') + 1:]

@@ -69,7 +69,7 @@ class AgentBrain:
                         self.KB.tell([sentence])
                     else:
                         self.action_list.append(Action.FAIL_TO_INFER)
-                        remove_list.append(neighbor)
+                        # remove_list.append(neighbor)
             if self.current_cell.has_stench():
                 self.action_list.append(Action.SHOOT_RANDOMLY)
                 for neighbor in neighbors:

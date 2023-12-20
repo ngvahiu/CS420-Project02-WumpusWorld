@@ -269,7 +269,10 @@ class Game:
 
         # return if finish the action list
         if self.current_step == len(self.action_list):
-            self.state = "success"
+            if self.action_list[-1] == Action.CLIMB_OUT_OF_THE_CAVE:
+                self.state = "success"
+            else:
+                self.state = "failed"
             return
         
         # get action
@@ -343,6 +346,8 @@ class Game:
                 infer_cell = self.agent_brain.action_cells[self.current_step - 1]
                 infer_cell_x, infer_cell_y = infer_cell.x, infer_cell.y
                 print("Fail to infer cell:", infer_cell_x, infer_cell_y)
+            case Action.FAIL_TO_ESCAPE:
+                print("Agent fail to find way out")
             case _:
                 print("Unknown action")
         self.draw_running_screen()
@@ -371,9 +376,11 @@ class Game:
                 self.agent_brain.action_list = []
                 self.agent_brain.find_exit()
                 self.action_list.extend(self.agent_brain.action_list)
+                self.action_list.append(Action.TURN_DOWN)
+                self.action_list.append(Action.CLIMB_OUT_OF_THE_CAVE)
             # if exit cell has not been visited before => can not go to exit cell
             else:
-                print("Agent can not find way out")
+                self.action_list.append(Action.FAIL_TO_ESCAPE)
 
         # reset the visited list to render in UI later
         for cell in self.map.grid_cells:
