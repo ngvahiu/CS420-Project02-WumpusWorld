@@ -4,9 +4,7 @@ class KnowledgeBase:
     def __init__(self):
         self.sentences = []
 
-
-    @staticmethod
-    def standardize_sentence(sentence):
+    def standardize_sentence(self, sentence):
         return sorted(list(set(sentence)))
 
 
@@ -22,11 +20,11 @@ class KnowledgeBase:
             self.sentences.remove(sentence)
 
 
-    def ask(self, sentence):
+    def ask(self, neg_sentence):
         clause_list = copy.deepcopy(self.sentences)
-        clause_list.extend(sentence)
+        clause_list.extend(neg_sentence)
         g = SATSolver(clause_list)
-        sol = g.solve()
-        if sol:
+        satisfiable = g.solve()
+        if satisfiable:
             return False
         return True

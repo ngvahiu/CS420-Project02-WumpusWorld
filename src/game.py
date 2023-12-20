@@ -256,30 +256,7 @@ class Game:
             if self.state == "menu":
                 self.draw_menu_screen()
             elif self.state == "solving":
-                agent_cell = self.agent.cell
-                self.agent_brain = AgentBrain(self.agent.cell, self.map.grid_cells)
-                self.agent_brain.solve()
-                self.action_list = self.agent_brain.action_list
-                if self.agent.cell.x == 0 and self.agent.cell.y == self.agent.cell.map_size - 1:
-                    self.action_list.append(Action.TURN_DOWN)
-                    self.action_list.append(Action.CLIMB_OUT_OF_THE_CAVE)
-                else:
-                    exist_cell = None
-                    for cell in self.map.grid_cells:
-                        if cell.x == 0 and cell.y == cell.map_size - 1:
-                            exist_cell = cell
-                    if exist_cell.visited:
-                        for cell in self.map.grid_cells:
-                            cell.visited = False
-                        self.agent_brain.action_list = []
-                        self.agent_brain.find_exist()
-                        self.action_list.extend(self.agent_brain.action_list)
-                    else:
-                        print("Agent can not find way out")
-                for cell in self.map.grid_cells:
-                    cell.visited = False
-                agent_cell.visited = True
-                self.state = 'show_result'
+                self.solve()
             elif self.state == 'show_result':
                 self.show_result()
             elif self.state == "success":
@@ -289,75 +266,117 @@ class Game:
 
     def show_result(self):
         self.draw_running_screen()
+
+        # return if finish the action list
         if self.current_step == len(self.action_list):
             self.state = "success"
             return
+        
+        # get action
         action = self.action_list[self.current_step]
+
+        # increase the step
         if len(self.action_list) > self.current_step:
             self.current_step +=1
-        if action == Action.TURN_LEFT:
-            self.agent.turn_left()
-        elif action == Action.TURN_RIGHT:
-            self.agent.turn_right() 
-        elif action == Action.TURN_UP:
-            self.agent.turn_up()
-        elif action == Action.TURN_DOWN:
-            self.agent.turn_down()
-        elif action == Action.MOVE_FORWARD:
-            from cell import Cell
-            self.agent.move_forward(self.map.grid_cells)
-        elif action == Action.GRAB_GOLD:
-            self.draw_running_screen(Notification.COLLECT_GOLD)
-            self.agent.collect_gold()
-        elif action == Action.PERCEIVE_BREEZE:
-            print("Perceiving breeze")
-        elif action == Action.PERCEIVE_STENCH:
-            print("Perceiving stench")
-        elif action == Action.SHOOT:
-            print("Shooting wumpus")
-            arrow_cell = self.agent.shoot_arrow(self.map.grid_cells)
-            self.draw_running_screen(Notification.SHOOT_ARROW)
-        elif action == Action.KILL_WUMPUS:
-            print("Killing Wumpus")
-        elif action == Action.KILL_NO_WUMPUS:
-            print("Killing, but no Wumpus found")
-        elif action == Action.KILL_BY_WUMPUS:
-            print("Killed by Wumpus")
-        elif action == Action.KILL_BY_PIT:
-            print("Killed by Pit")
-        elif action == Action.CLIMB_OUT_OF_THE_CAVE:
-            print("Climbing out of the cave")
-        elif action == Action.DECTECT_PIT:
-            pit_cell = self.agent_brain.action_cells[self.current_step-1]
-            pit_x, pit_y = pit_cell.x, pit_cell.y
-            print("Detect pit at: " + str(pit_x) + " " + str(pit_y))
-            pit_cell.visited = True
-        elif action == Action.DETECT_WUMPUS:
-            wumpus_cell = self.agent_brain.action_cells[self.current_step-1]
-            wumpus_x, wumpus_y = wumpus_cell.x, wumpus_cell.y
-            print("Detect wumpus at: " + str(wumpus_x) + " " + str(wumpus_y))
-            wumpus_cell.visited = True
-        elif action == Action.DETECT_NO_PIT:
-            pit_cell = self.agent_brain.action_cells[self.current_step-1]
-            pit_x, pit_y = pit_cell.x, pit_cell.y
-            print("Detect no pit at: " + str(pit_x) + " " + str(pit_y))
-        elif action == Action.DETECT_NO_WUMPUS:
-            wumpus_cell = self.agent_brain.action_cells[self.current_step-1]
-            wumpus_x, wumpus_y = wumpus_cell.x, wumpus_cell.y
-            print("Detect no wumpus at: " + str(wumpus_x) + " " + str(wumpus_y))
-        elif action == Action.INFER_PIT:
-            print("Inferring pit")
-        elif action == Action.INFER_WUMPUS:
-            print("Inferring Wumpus")
-        elif action == Action.REMOVE_KNOWLEDGE_RELATED_TO_WUMPUS:
-            print("Remove knowledge related to killed wumpus")
-        elif action == Action.SHOOT_RANDOMLY:
-            print("Start shooting randomly")
-        elif action == Action.FAIL_TO_INFER:
-            infer_cell = self.agent_brain.action_cells[self.current_step-1]
-            infer_cell_x, infer_cell_y = infer_cell.x, infer_cell.y
-            print("Fail to infer cell: " + str(infer_cell_x) + " " + str(infer_cell_y))
-        else:
-            print("Unknown action")
+        
+        # perform action
+        match action:
+            case Action.TURN_LEFT:
+                self.agent.turn_left()
+            case Action.TURN_RIGHT:
+                self.agent.turn_right()
+            case Action.TURN_UP:
+                self.agent.turn_up()
+            case Action.TURN_DOWN:
+                self.agent.turn_down()
+            case Action.MOVE_FORWARD:
+                from cell import Cell
+                self.agent.move_forward(self.map.grid_cells)
+            case Action.GRAB_GOLD:
+                self.draw_running_screen(Notification.COLLECT_GOLD)
+                self.agent.collect_gold()
+            case Action.PERCEIVE_BREEZE:
+                print("Perceiving breeze")
+            case Action.PERCEIVE_STENCH:
+                print("Perceiving stench")
+            case Action.SHOOT:
+                print("Shooting wumpus")
+                arrow_cell = self.agent.shoot_arrow(self.map.grid_cells)
+                self.draw_running_screen(Notification.SHOOT_ARROW)
+            case Action.KILL_WUMPUS:
+                print("Killing Wumpus")
+            case Action.KILL_NO_WUMPUS:
+                print("Killing, but no Wumpus found")
+            case Action.KILL_BY_WUMPUS:
+                print("Killed by Wumpus")
+            case Action.KILL_BY_PIT:
+                print("Killed by Pit")
+            case Action.CLIMB_OUT_OF_THE_CAVE:
+                print("Climbing out of the cave")
+            case Action.DETECT_PIT:
+                pit_cell = self.agent_brain.action_cells[self.current_step - 1]
+                pit_x, pit_y = pit_cell.x, pit_cell.y
+                print("Detect pit at:", pit_x, pit_y)
+                pit_cell.visited = True
+            case Action.DETECT_WUMPUS:
+                wumpus_cell = self.agent_brain.action_cells[self.current_step - 1]
+                wumpus_x, wumpus_y = wumpus_cell.x, wumpus_cell.y
+                print("Detect wumpus at:", wumpus_x, wumpus_y)
+                wumpus_cell.visited = True
+            case Action.DETECT_NO_PIT:
+                pit_cell = self.agent_brain.action_cells[self.current_step - 1]
+                pit_x, pit_y = pit_cell.x, pit_cell.y
+                print("Detect no pit at:", pit_x, pit_y)
+            case Action.DETECT_NO_WUMPUS:
+                wumpus_cell = self.agent_brain.action_cells[self.current_step - 1]
+                wumpus_x, wumpus_y = wumpus_cell.x, wumpus_cell.y
+                print("Detect no wumpus at:", wumpus_x, wumpus_y)
+            case Action.INFER_PIT:
+                print("Inferring pit")
+            case Action.INFER_WUMPUS:
+                print("Inferring Wumpus")
+            case Action.REMOVE_KNOWLEDGE_RELATED_TO_WUMPUS:
+                print("Remove knowledge related to killed wumpus")
+            case Action.SHOOT_RANDOMLY:
+                print("Start shooting randomly")
+            case Action.FAIL_TO_INFER:
+                infer_cell = self.agent_brain.action_cells[self.current_step - 1]
+                infer_cell_x, infer_cell_y = infer_cell.x, infer_cell.y
+                print("Fail to infer cell:", infer_cell_x, infer_cell_y)
+            case _:
+                print("Unknown action")
         self.draw_running_screen()
         pygame.time.delay(100)
+    
+    def solve(self):
+        agent_cell = self.agent.cell
+        self.agent_brain = AgentBrain(self.agent.cell, self.map.grid_cells)
+        self.agent_brain.solve()
+        self.action_list = self.agent_brain.action_list
+        # if agent is at the exist, just climb out
+        if self.agent.cell.x == 0 and self.agent.cell.y == self.agent.cell.map_size - 1:
+            self.action_list.append(Action.TURN_DOWN)
+            self.action_list.append(Action.CLIMB_OUT_OF_THE_CAVE)
+        else:
+            # find the exist cell
+            exist_cell = None
+            for cell in self.map.grid_cells:
+                if cell.x == 0 and cell.y == cell.map_size - 1:
+                    exist_cell = cell
+            
+            # find way out for agent
+            if exist_cell.visited:
+                for cell in self.map.grid_cells:
+                    cell.visited = False
+                self.agent_brain.action_list = []
+                self.agent_brain.find_exist()
+                self.action_list.extend(self.agent_brain.action_list)
+            # if exist cell has not been visited before => can not go to exist cell
+            else:
+                print("Agent can not find way out")
+
+        # reset the visited list to render in UI later
+        for cell in self.map.grid_cells:
+            cell.visited = False
+        agent_cell.visited = True
+        self.state = 'show_result'

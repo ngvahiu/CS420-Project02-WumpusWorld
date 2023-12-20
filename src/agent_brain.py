@@ -92,7 +92,7 @@ class AgentBrain:
                 self.action_cells[len(self.action_list)] = neighbor
                 if detect_pit:
                     neighbor.visited = True
-                    self.action_list.append(Action.DECTECT_PIT)
+                    self.action_list.append(Action.DETECT_PIT)
                     self.KB.tell([sentence])
                     if neighbor not in remove_list:
                         remove_list.append(neighbor)
