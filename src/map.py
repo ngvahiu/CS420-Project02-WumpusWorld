@@ -22,13 +22,13 @@ class Map:
                 cells = line.split(".")
 
                 for j, cell in enumerate(cells):
-                    if cell == "A":
+                    if 'A' in cell:
                         cell = Cell(j, i, "A")
-                    elif cell == "P":
+                    elif 'P' in cell:
                         cell = Cell(j, i, "P")
-                    elif cell == "W":
+                    elif 'W' in cell:
                         cell = Cell(j, i, "W")
-                    elif cell == "G":
+                    elif 'G' in cell:
                         cell = Cell(j, i, "G")
                     else:
                         cell = Cell(j, i, "-")

@@ -76,7 +76,7 @@ class AgentBrain:
                     turn_action = self.current_cell.get_turn_action(neighbor)
                     self.action_list.append(turn_action)
                     self.action_list.append(Action.SHOOT)
-                    if neighbor.have_wumpus():
+                    if neighbor.has_wumpus():
                         self.action_list.append(Action.KILL_WUMPUS)
                         neighbor.remove_stench(self.grid_cells)
                         self.remove_wumpus(neighbor)
