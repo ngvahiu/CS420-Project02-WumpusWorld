@@ -16,7 +16,7 @@ class Cell:
         self.img_list = {
             "arrow": None,
             "gold": None,
-            "obstacle": None,  # agent, gold, pit, wumpus
+            "obstacle": None,  # pit, wumpus
             "agent": None,
             "breeze": None,
             "stench": None,
@@ -92,10 +92,23 @@ class Cell:
             pygame.draw.rect(
                 screen, pygame.Color(173, 116, 96), (x, y, CELL_SIZE, CELL_SIZE)
             )
-        elif self.img_list["arrow"] and not self.visited:
+        elif self.img_list["arrow"]:
             pygame.draw.rect(
                 screen, pygame.Color(173, 116, 96), (x, y, CELL_SIZE, CELL_SIZE)
             )
+            # if wumpus exists in this cell, draw it
+            if self.img_list["obstacle"] and "W" in self.type:
+                self.img_list["obstacle"] = pygame.transform.scale(
+                    self.img_list["obstacle"], (CELL_SIZE // 1.2, CELL_SIZE // 1.2)
+                )
+                screen.blit(
+                    self.img_list["obstacle"],
+                    (
+                        self.x * CELL_SIZE + CELL_SIZE // 10,
+                        self.y * CELL_SIZE + CELL_SIZE // 10,
+                    ),
+                )
+            # draw arrow
             self.img_list["arrow"] = pygame.transform.scale(
                 self.img_list["arrow"], (CELL_SIZE, CELL_SIZE)
             )
@@ -107,8 +120,6 @@ class Cell:
                 ),
             )
 
-            # if the cell containing a arrow has any pit or Wumpus -> set this cell's VISITED = True
-            self.visited = True
             self.img_list["arrow"] = None
         elif self.visited:
             pygame.draw.rect(

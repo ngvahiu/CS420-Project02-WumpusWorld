@@ -17,6 +17,7 @@ class Game:
         self.font = pygame.font.Font(FONT_STYLE, 30)
         self.font_score = pygame.font.Font(FONT_STYLE, 50)
         self.font_title = pygame.font.Font(FONT_STYLE, 70)
+        self.font_instruction = pygame.font.Font(FONT_STYLE, 20)
 
         self.map = None
         self.map_size = None
@@ -44,7 +45,7 @@ class Game:
         score_rect = score_text.get_rect()
         score_rect.center = (
             WINDOW_WIDTH // 2 + CELL_SIZE * 5,
-            WINDOW_HEIGHT // 5,
+            WINDOW_HEIGHT // 8,
         )
         self.screen.blit(score_text, score_rect)
 
@@ -53,9 +54,35 @@ class Game:
         gold_rect = gold_text.get_rect()
         gold_rect.center = (
             WINDOW_WIDTH // 2 + CELL_SIZE * 5,
-            WINDOW_HEIGHT // 4,
+            WINDOW_HEIGHT // 6,
         )
         self.screen.blit(gold_text, gold_rect)
+
+        # draw instructions
+        instructions = [
+            ("Wumpus", WUMPUS_IMG),
+            ("Pit", PIT_IMG),
+            ("Stench", STENCH_IMG),
+            ("Breeze", BREEZE_IMG),
+        ]
+        for i, (text, img) in enumerate(instructions):
+            img = pygame.image.load(img).convert_alpha()
+            img = pygame.transform.scale(img, (CELL_SIZE, CELL_SIZE))
+            self.screen.blit(
+                img,
+                (
+                    WINDOW_WIDTH // 2 + CELL_SIZE * 4,
+                    WINDOW_HEIGHT // 4.5 + i * CELL_SIZE * 1.2,
+                ),
+            )
+
+            text = self.font_instruction.render(text, True, (169, 151, 111))
+            text_rect = gold_text.get_rect()
+            text_rect.center = (
+                WINDOW_WIDTH // 2 + CELL_SIZE * 7,
+                WINDOW_HEIGHT // 4.5 + i * CELL_SIZE * 1.2 + CELL_SIZE // 2 + 10,
+            )
+            self.screen.blit(text, text_rect)
 
         # draw map
         self.map.draw(self.screen)
@@ -99,7 +126,7 @@ class Game:
         text_rect = text.get_rect()
         text_rect.center = (
             WINDOW_WIDTH // 2 + CELL_SIZE * 5,
-            WINDOW_HEIGHT // 2,
+            WINDOW_HEIGHT // 1.5,
         )
         self.screen.blit(text, text_rect)
         # Show image
@@ -108,7 +135,7 @@ class Game:
             img,
             (
                 WINDOW_WIDTH // 2 + CELL_SIZE * 3.5,
-                WINDOW_HEIGHT // 1.5,
+                WINDOW_HEIGHT // 1.4,
             ),
         )
 
@@ -216,7 +243,7 @@ class Game:
 
         text = self.font_title.render("SUCCESSFUL!!!", True, (0, 0, 0))
         text_rect = text.get_rect()
-        text_rect.center = (WINDOW_WIDTH // 2, 50)
+        text_rect.center = (WINDOW_WIDTH // 2 + 30, 50)
         self.screen.blit(text, text_rect)
 
         score = self.agent.score
@@ -226,7 +253,14 @@ class Game:
 
         pygame.display.update()
         pygame.time.delay(3000)
+
+        # reset everything
         self.state = "menu"
+        self.map = None
+        self.map_size = None
+        self.agent = Agent()
+        self.agent_brain = None
+        self.current_step = 0
 
     def draw_failed_screen(self):
         for event in pygame.event.get():
@@ -249,6 +283,7 @@ class Game:
 
         pygame.display.update()
         pygame.time.delay(3000)
+
         self.state = "menu"
 
     def run(self):
@@ -257,7 +292,7 @@ class Game:
                 self.draw_menu_screen()
             elif self.state == "solving":
                 self.solve()
-            elif self.state == 'show_result':
+            elif self.state == "show_result":
                 self.show_result()
             elif self.state == "success":
                 self.draw_success_screen()
@@ -274,14 +309,14 @@ class Game:
             else:
                 self.state = "failed"
             return
-        
+
         # get action
         action = self.action_list[self.current_step]
 
         # increase the step
         if len(self.action_list) > self.current_step:
-            self.current_step +=1
-        
+            self.current_step += 1
+
         # perform action
         match action:
             case Action.TURN_LEFT:
@@ -294,6 +329,7 @@ class Game:
                 self.agent.turn_down()
             case Action.MOVE_FORWARD:
                 from cell import Cell
+
                 self.agent.move_forward(self.map.grid_cells)
             case Action.GRAB_GOLD:
                 self.draw_running_screen(Notification.COLLECT_GOLD)
@@ -306,6 +342,18 @@ class Game:
                 print("Shooting wumpus")
                 arrow_cell = self.agent.shoot_arrow(self.map.grid_cells)
                 self.draw_running_screen(Notification.SHOOT_ARROW)
+                if "W" in arrow_cell.type:
+                    # remove Wumpus
+                    arrow_cell.type = arrow_cell.type.replace("W", "")
+                    arrow_cell.img_list["obstacle"] = None
+                    arrow_cell.visited = True
+                    # remove stench in neighbor cells
+                    neighbors = arrow_cell.get_neighbors(self.map.grid_cells)
+                    for neighbor in neighbors:
+                        neighbor.img_list["stench"] = None
+                        neighbor.type = neighbor.type.replace("S", "")
+
+                    self.draw_running_screen(Notification.KILL_WUMPUS)
             case Action.KILL_WUMPUS:
                 print("Killing Wumpus")
             case Action.KILL_NO_WUMPUS:
@@ -352,7 +400,7 @@ class Game:
                 print("Unknown action")
         self.draw_running_screen()
         pygame.time.delay(100)
-    
+
     def solve(self):
         agent_cell = self.agent.cell
         self.agent_brain = AgentBrain(self.agent.cell, self.map.grid_cells)
@@ -368,7 +416,7 @@ class Game:
             for cell in self.map.grid_cells:
                 if cell.x == 0 and cell.y == cell.map_size - 1:
                     exit_cell = cell
-            
+
             # find way out for agent
             if exit_cell.visited:
                 for cell in self.map.grid_cells:
@@ -386,4 +434,4 @@ class Game:
         for cell in self.map.grid_cells:
             cell.visited = False
         agent_cell.visited = True
-        self.state = 'show_result'
+        self.state = "show_result"
