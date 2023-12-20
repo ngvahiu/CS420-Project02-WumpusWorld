@@ -9,7 +9,7 @@ class AgentBrain:
         self.KB = KnowledgeBase()
         self.action_list = []
         self.action_cells = {}
-        self.found_exist = False
+        self.found_exit = False
         self.remain_cells = []
     
     def solve(self):
@@ -142,12 +142,12 @@ class AgentBrain:
             
         return True
 
-    def find_exist(self):
+    def find_exit(self):
         self.current_cell.visited = True
-        if self.found_exist:
+        if self.found_exit:
             return
         if self.current_cell.x == 0 and self.current_cell.y == self.current_cell.map_size -1:
-            self.found_exist = True
+            self.found_exit = True
             return 
         neighbors = self.current_cell.get_neighbors(self.grid_cells)
         remove_list = []
@@ -164,8 +164,8 @@ class AgentBrain:
             self.action_list.append(Action.MOVE_FORWARD)
             self.current_cell = neighbor
 
-            self.find_exist()
-            if self.found_exist:
+            self.find_exit()
+            if self.found_exit:
                 return
 
             turn_action = self.current_cell.get_turn_action(current_cell)

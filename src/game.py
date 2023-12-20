@@ -353,25 +353,25 @@ class Game:
         self.agent_brain = AgentBrain(self.agent.cell, self.map.grid_cells)
         self.agent_brain.solve()
         self.action_list = self.agent_brain.action_list
-        # if agent is at the exist, just climb out
+        # if agent is at the exit, just climb out
         if self.agent.cell.x == 0 and self.agent.cell.y == self.agent.cell.map_size - 1:
             self.action_list.append(Action.TURN_DOWN)
             self.action_list.append(Action.CLIMB_OUT_OF_THE_CAVE)
         else:
-            # find the exist cell
-            exist_cell = None
+            # find the exit cell
+            exit_cell = None
             for cell in self.map.grid_cells:
                 if cell.x == 0 and cell.y == cell.map_size - 1:
-                    exist_cell = cell
+                    exit_cell = cell
             
             # find way out for agent
-            if exist_cell.visited:
+            if exit_cell.visited:
                 for cell in self.map.grid_cells:
                     cell.visited = False
                 self.agent_brain.action_list = []
-                self.agent_brain.find_exist()
+                self.agent_brain.find_exit()
                 self.action_list.extend(self.agent_brain.action_list)
-            # if exist cell has not been visited before => can not go to exist cell
+            # if exit cell has not been visited before => can not go to exit cell
             else:
                 print("Agent can not find way out")
 
