@@ -140,7 +140,10 @@ class Game:
         )
 
         pygame.display.update()
-        pygame.time.delay(500)
+        delay_time = 500
+        if self.map.file_name == MAP_5:
+            delay_time = 100
+        pygame.time.delay(delay_time)
 
     def draw_menu_screen(self):
         self.screen.fill((255, 255, 255))
@@ -328,8 +331,6 @@ class Game:
             case Action.TURN_DOWN:
                 self.agent.turn_down()
             case Action.MOVE_FORWARD:
-                from cell import Cell
-
                 self.agent.move_forward(self.map.grid_cells)
             case Action.GRAB_GOLD:
                 self.draw_running_screen(Notification.COLLECT_GOLD)
@@ -399,7 +400,10 @@ class Game:
             case _:
                 print("Unknown action")
         self.draw_running_screen()
-        pygame.time.delay(100)
+        delay_time = 100
+        if self.map.file_name == MAP_5:
+            delay_time = 50
+        pygame.time.delay(delay_time)
 
     def solve(self):
         agent_cell = self.agent.cell

@@ -275,7 +275,7 @@ class Cell:
 
     
     def remove_stench(self, grid_cells):
-        if not self.has_wumpus():
+        if not self.has_wumpus() or self.is_safe == True:
             return
         self.is_safe = True
         neighbors = self.get_neighbors(grid_cells)

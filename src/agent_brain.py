@@ -73,13 +73,16 @@ class AgentBrain:
             if self.current_cell.has_stench():
                 self.action_list.append(Action.SHOOT_RANDOMLY)
                 for neighbor in neighbors:
+                    if not self.current_cell.has_stench():
+                        break
                     turn_action = self.current_cell.get_turn_action(neighbor)
                     self.action_list.append(turn_action)
                     self.action_list.append(Action.SHOOT)
-                    if neighbor.has_wumpus():
+                    if neighbor.has_wumpus() and neighbor.is_safe == False:
                         self.action_list.append(Action.KILL_WUMPUS)
                         neighbor.remove_stench(self.grid_cells)
                         self.remove_wumpus(neighbor)
+                        self.KB.tell([-1*(PIT*100 + neighbor.get_location())])
                         self.action_list.append(Action.REMOVE_KNOWLEDGE_RELATED_TO_WUMPUS)
                     else:
                         self.action_list.append(Action.KILL_NO_WUMPUS)
