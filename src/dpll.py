@@ -5,14 +5,14 @@ class SATSolver:
     def __init__(self, cnf):
         # extract unique clauses and literals
         self.clauses = self.extract_unique_clauses(cnf)
-        self.literals = self.extract_unique_literals(self.clauses)
+        # self.literals = self.extract_unique_literals(self.clauses)
     
     def solve(self):
-        return self.dpll(self.clauses, self.literals)
+        return self.dpll(self.clauses)
         
-    def dpll(self, cnf, literals):
+    def dpll(self, cnf):
         # unit propagation
-        self.unit_propagation(cnf,literals)
+        self.unit_propagation(cnf)
                 
         # Check if the CNF is unsatisfiable
         if [] in cnf:
@@ -22,20 +22,15 @@ class SATSolver:
             return True
         
         # choose a literal and its negation
-        selected_literal = literals
         most_common_literal = self.most_common(cnf)
-        cnf1 = cnf
-        
-        if most_common_literal in selected_literal:
-            selected_literal.remove(most_common_literal)
             
         reduced_cnf_positive = self.reduced(cnf, most_common_literal)
-        reduced_cnf_negative = self.reduced(cnf1, -most_common_literal)
+        reduced_cnf_negative = self.reduced(cnf, -most_common_literal)
         
         # apply DPLL on the positive and negative branches
-        return self.dpll(reduced_cnf_positive, selected_literal) or self.dpll(reduced_cnf_negative, selected_literal)
+        return self.dpll(reduced_cnf_positive) or self.dpll(reduced_cnf_negative)
     
-    def unit_propagation(self, cnf, literals):
+    def unit_propagation(self, cnf):
         remove_clause = []
         changed = True
         checked_literal = set()
@@ -45,7 +40,6 @@ class SATSolver:
                 if len(clause) == 1 and clause[0] not in checked_literal:
                     literal = clause[0]
                     checked_literal.add(literal)
-                    literals.remove(literal)
                     for clause in cnf:
                         if literal in clause:
                             remove_clause.append(clause)
