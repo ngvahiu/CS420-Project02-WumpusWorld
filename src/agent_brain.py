@@ -37,7 +37,7 @@ class AgentBrain:
         for neighbor in neighbors:
             if neighbor == self.current_cell.parent:
                 remove_list.append(neighbor)
-            elif neighbor.visited == True and neighbor.has_pit():
+            elif neighbor.visited == True:
                 remove_list.append(neighbor)
         
         for cell in remove_list:
