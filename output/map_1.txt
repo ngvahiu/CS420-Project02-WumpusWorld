@@ -1,0 +1,418 @@
+Result: Agent explore the world successfully!
+Agent's actions:
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Perceiving breeze
+Perceiving stench
+Inferring Wumpus
+Fail to infer cell: 4, 2
+Inferring Wumpus
+Fail to infer cell: 5, 1
+Inferring Wumpus
+Fail to infer cell: 5, 3
+Start shooting randomly
+Agent turn left
+Agent shoot wumpus
+Killing, but no Wumpus found
+Agent turn up
+Agent shoot wumpus
+Killing Wumpus
+Remove knowledge related to killed wumpus
+Inferring pit
+Fail to infer cell: 4, 2
+Inferring pit
+Detect no pit at: 5, 1
+Inferring pit
+Fail to infer cell: 5, 3
+Agent turn up
+Agent move forward
+Perceiving breeze
+Inferring pit
+Detect no pit at: 6, 1
+Inferring pit
+Fail to infer cell: 4, 1
+Inferring pit
+Fail to infer cell: 5, 0
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent collect gold
+Agent turn right
+Agent move forward
+Agent turn up
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Perceiving breeze
+Inferring pit
+Detect pit at: 4, 0
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Perceiving breeze
+Inferring pit
+Fail to infer cell: 0, 4
+Inferring pit
+Fail to infer cell: 1, 3
+Inferring pit
+Fail to infer cell: 1, 5
+Agent turn right
+Agent move forward
+Agent turn up
+Agent move forward
+Perceiving breeze
+Perceiving stench
+Inferring Wumpus
+Detect no wumpus at: 3, 3
+Inferring Wumpus
+Detect no wumpus at: 1, 3
+Inferring Wumpus
+Detect wumpus at: 2, 2
+Agent turn up
+Agent shoot wumpus
+Killing Wumpus
+Remove knowledge related to killed wumpus
+Inferring pit
+Detect no pit at: 3, 3
+Inferring pit
+Detect pit at: 1, 3
+Inferring pit
+Detect no pit at: 2, 2
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Perceiving breeze
+Inferring pit
+Detect no pit at: 5, 3
+Inferring pit
+Detect pit at: 4, 2
+Agent turn right
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn up
+Agent move forward
+Perceiving breeze
+Inferring pit
+Detect no pit at: 2, 2
+Inferring pit
+Fail to infer cell: 3, 1
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Perceiving breeze
+Inferring pit
+Fail to infer cell: 0, 2
+Inferring pit
+Fail to infer cell: 1, 1
+Agent turn right
+Agent move forward
+Agent turn up
+Agent move forward
+Agent turn right
+Agent move forward
+Perceiving breeze
+Inferring pit
+Detect pit at: 4, 1
+Inferring pit
+Fail to infer cell: 3, 0
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn up
+Agent move forward
+Agent collect gold
+Agent turn right
+Agent move forward
+Agent collect gold
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Perceiving breeze
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn down
+Agent move forward
+Perceiving breeze
+Inferring pit
+Fail to infer cell: 0, 4
+Agent turn up
+Agent move forward
+Agent turn up
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent collect gold
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Perceiving breeze
+Inferring pit
+Detect no pit at: 7, 5
+Inferring pit
+Detect pit at: 6, 6
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Perceiving breeze
+Inferring pit
+Fail to infer cell: 7, 7
+Agent turn right
+Agent move forward
+Agent turn down
+Agent move forward
+Perceiving breeze
+Inferring pit
+Detect no pit at: 9, 7
+Inferring pit
+Fail to infer cell: 7, 7
+Inferring pit
+Fail to infer cell: 8, 8
+Agent turn right
+Agent move forward
+Agent turn down
+Agent move forward
+Perceiving breeze
+Inferring pit
+Fail to infer cell: 8, 8
+Inferring pit
+Fail to infer cell: 9, 9
+Agent turn up
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn up
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn up
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn down
+Agent move forward
+Perceiving breeze
+Inferring pit
+Detect no pit at: 4, 6
+Inferring pit
+Fail to infer cell: 5, 7
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn up
+Agent move forward
+Perceiving breeze
+Inferring pit
+Detect no pit at: 1, 5
+Inferring pit
+Detect pit at: 0, 4
+Agent turn right
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Perceiving breeze
+Inferring pit
+Fail to infer cell: 7, 7
+Inferring pit
+Fail to infer cell: 6, 8
+Agent turn left
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Perceiving breeze
+Inferring pit
+Fail to infer cell: 8, 8
+Inferring pit
+Fail to infer cell: 7, 7
+Inferring pit
+Fail to infer cell: 7, 9
+Agent turn left
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Perceiving breeze
+Inferring pit
+Fail to infer cell: 9, 9
+Inferring pit
+Fail to infer cell: 8, 8
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent collect gold
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn up
+Agent move forward
+Agent collect gold
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn right
+Agent move forward
+Agent turn down
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn left
+Agent move forward
+Agent turn down
+Climbing out of the cave

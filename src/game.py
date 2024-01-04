@@ -1,7 +1,7 @@
 import sys
 from agent_brain import AgentBrain
 import pygame
-
+import os
 from agent import *
 from constants import *
 from map import Map
@@ -404,6 +404,90 @@ class Game:
         if self.map.file_name == MAP_5:
             delay_time = 50
         pygame.time.delay(delay_time)
+    
+    def output_result_to_text(self):
+        output_directory = '../output/'
+        output_file_path = output_directory + self.map.file_name[-9:]
+
+        # Check if the output directory exists, and create it if not
+        if not os.path.exists(output_directory):
+            os.makedirs(output_directory)
+        
+        #output to text file
+        with open(output_file_path, 'w') as output_file:
+            if self.action_list[-1] == Action.CLIMB_OUT_OF_THE_CAVE:
+                output_file.write("Result: Agent explore the world successfully!\n")
+            else:
+                output_file.write("Result: Agent fail to explore the world!\n")
+            output_file.write("Agent's actions:\n")
+            current_step = 0
+            while(current_step < len(self.action_list)):
+                # get action
+                action = self.action_list[current_step]
+                match action:
+                    case Action.TURN_LEFT:
+                        output_file.write("Agent turn left\n")
+                    case Action.TURN_RIGHT:
+                        output_file.write("Agent turn right\n")
+                    case Action.TURN_UP:
+                        output_file.write("Agent turn up\n")
+                    case Action.TURN_DOWN:
+                        output_file.write("Agent turn down\n")
+                    case Action.MOVE_FORWARD:
+                        output_file.write("Agent move forward\n")
+                    case Action.GRAB_GOLD:
+                        output_file.write("Agent collect gold\n")
+                    case Action.PERCEIVE_BREEZE:
+                        output_file.write("Perceiving breeze\n")
+                    case Action.PERCEIVE_STENCH:
+                        output_file.write("Perceiving stench\n")
+                    case Action.SHOOT:
+                        output_file.write("Agent shoot wumpus\n")
+                    case Action.KILL_WUMPUS:
+                        output_file.write("Killing Wumpus\n")
+                    case Action.KILL_NO_WUMPUS:
+                        output_file.write("Killing, but no Wumpus found\n")
+                    case Action.KILL_BY_WUMPUS:
+                        output_file.write("Killed by Wumpus\n")
+                    case Action.KILL_BY_PIT:
+                        output_file.write("Killed by Pit\n")
+                    case Action.CLIMB_OUT_OF_THE_CAVE:
+                        output_file.write("Climbing out of the cave\n")
+                    case Action.DETECT_PIT:
+                        pit_cell = self.agent_brain.action_cells[current_step]
+                        pit_x, pit_y = pit_cell.x, pit_cell.y
+                        output_file.write(f"Detect pit at: {pit_x}, {pit_y}\n")
+                    case Action.DETECT_WUMPUS:
+                        wumpus_cell = self.agent_brain.action_cells[current_step]
+                        wumpus_x, wumpus_y = wumpus_cell.x, wumpus_cell.y
+                        output_file.write(f"Detect wumpus at: {wumpus_x}, {wumpus_y}\n")
+                    case Action.DETECT_NO_PIT:
+                        pit_cell = self.agent_brain.action_cells[current_step]
+                        pit_x, pit_y = pit_cell.x, pit_cell.y
+                        output_file.write(f"Detect no pit at: {pit_x}, {pit_y}\n")
+                    case Action.DETECT_NO_WUMPUS:
+                        wumpus_cell = self.agent_brain.action_cells[current_step]
+                        wumpus_x, wumpus_y = wumpus_cell.x, wumpus_cell.y
+                        output_file.write(f"Detect no wumpus at: {wumpus_x}, {wumpus_y}\n")
+                    case Action.INFER_PIT:
+                        output_file.write("Inferring pit\n")
+                    case Action.INFER_WUMPUS:
+                        output_file.write("Inferring Wumpus\n")
+                    case Action.REMOVE_KNOWLEDGE_RELATED_TO_WUMPUS:
+                        output_file.write("Remove knowledge related to killed wumpus\n")
+                    case Action.SHOOT_RANDOMLY:
+                        output_file.write("Start shooting randomly\n")
+                    case Action.FAIL_TO_INFER:
+                        infer_cell = self.agent_brain.action_cells[current_step]
+                        infer_cell_x, infer_cell_y = infer_cell.x, infer_cell.y
+                        output_file.write(f"Fail to infer cell: {infer_cell_x}, {infer_cell_y}\n")
+                    case Action.FAIL_TO_ESCAPE:
+                        output_file.write("Agent fail to find way out\n")
+                    case _:
+                        output_file.write("Unknown action\n")
+
+                current_step+=1
+
 
     def solve(self):
         agent_cell = self.agent.cell
@@ -433,6 +517,9 @@ class Game:
             # if exit cell has not been visited before => can not go to exit cell
             else:
                 self.action_list.append(Action.FAIL_TO_ESCAPE)
+        
+        #output result to text file
+        self.output_result_to_text()
 
         # reset the visited list to render in UI later
         for cell in self.map.grid_cells:
